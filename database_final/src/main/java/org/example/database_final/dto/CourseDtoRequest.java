@@ -1,16 +1,56 @@
 package org.example.database_final.dto;
 
+/**
+ * A Data Transfer Object (DTO) class designed to handle course data as a request between different layers of the application.
+ * This class encapsulates all the necessary fields required to create or update a course, simplifying the data exchange between
+ * service, controller, and repository layers. It is intended to be used in forms or APIs where course details are needed in
+ * an input format.
+ */
 public class CourseDtoRequest {
+    /**
+     * The unique identifier for the course. It is used to identify the course in the database.
+     */
     private Long id;
+
+    /**
+     * The title of the course. This is a brief and descriptive name for the course.
+     */
     private String title;
+
+    /**
+     * A detailed description of the course content, objectives, and topics covered.
+     */
     private String description;
+
+    /**
+     * The duration of the course in hours. This represents how long it will take to complete the course.
+     */
     private Integer duration;
+
+    /**
+     *  The price of the course. This is typically set in terms of com.
+     */
     private Integer price;
+
+    /**
+     *  The name of the instructor who teaches the course.
+     */
     private String instructorName;
+
+    /**
+     * The name of the category to which the course belongs.
+     */
     private String categoryName;
 
+    /**
+     * Default constructor.
+     * Initializes a new instance of `CourseDtoRequest`.
+     */
     public CourseDtoRequest() {}
 
+    /**
+     * Getters and setters
+     */
     public Long getId() {
         return id;
     }

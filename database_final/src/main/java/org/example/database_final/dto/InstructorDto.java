@@ -2,14 +2,47 @@ package org.example.database_final.dto;
 
 import java.time.LocalDate;
 
+/**
+ * A Data Transfer Object (DTO) class for transferring instructor data between different layers of the application.
+ * This class encapsulates the essential properties of an instructor, providing a simplified view for use in service
+ * and presentation layers. The `InstructorDto` class helps in reducing the exposure of the entity model and provides
+ * an abstraction layer for communication between the backend and frontend.
+ */
 public class InstructorDto {
+    /**
+     * The unique identifier of the instructor.
+     */
     private Long id;
+
+    /**
+     * The name of the instructor.
+     */
     private String name;
+
+    /**
+     * The email address of the instructor.
+     */
     private String email;
+
+    /**
+     * A brief biography or description of the instructor.
+     */
     private String bio;
+
+    /**
+     * The registration date of the instructor.
+     */
     private LocalDate registrationDate;
 
+    /**
+     * Default constructor.
+     * Initializes a new instance of `InstructorDto`.
+     */
     public InstructorDto() {}
+
+    /**
+     * Getters and setters
+     */
 
     public Long getId() {
         return id;
