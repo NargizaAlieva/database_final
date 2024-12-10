@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Category Manager</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Category Management</h1>
+
+    <div class="text-right mb-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createCategoryModal">Create New Category</button>
+    </div>
+
+    <div class="text-right mb-3">
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">Search Category by Name</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchCategoryName" placeholder="Enter category name">
+                </div>
+                <button id="searchCategory" class="btn btn-info btn-block">Search Category</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchResults" class="mt-4">
+        <!-- Search results will be displayed here -->
+    </div>
+
+    <hr class="mt-4">
+
+    <div class="row" id="categories">
+        <!-- Categories will be dynamically populated here -->
+    </div>
+</div>
+
+<!-- Create Category Modal -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createCategoryForm">
+                    <div class="form-group">
+                        <label for="newCategoryName">Category Name</label>
+                        <input type="text" class="form-control" id="newCategoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newCategoryDescription">Category Description</label>
+                        <input type="text" class="form-control" id="newCategoryDescription" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveCategory">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Category Modal -->
+<div class="modal fade" id="updateCategoryModal" tabindex="-1" role="dialog" aria-labelledby="updateCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="updateCategoryModalLabel">Update Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateCategoryForm">
+                    <div class="form-group">
+                        <label for="updateCategoryName">Category Name</label>
+                        <input type="text" class="form-control" id="updateCategoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCategoryDescription">Category Description</label>
+                        <input type="text" class="form-control" id="updateCategoryDescription" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="updateCategory">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Fetch and display all categories on page load
+        fetchCategories();
+
+        function fetchCategories() {
+            $.get('/category/get-all-category', function (response) {
+                if (response.data) {
+                    const categoriesContainer = $('#categories');
+                    categoriesContainer.empty(); // Clear previous categories
+                    response.data.forEach(category => {
+                        categoriesContainer.append(`
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${category.name}</h5>
+                                    <p class="card-text">${category.description}</p>
+                                    <button class="btn btn-warning btn-sm updateCategoryBtn"
+                                            data-id="${category.id}"
+                                            data-name="${category.name}"
+                                            data-description="${category.description}"
+                                            data-toggle="modal"
+                                            data-target="#updateCategoryModal">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    });
+                } else {
+                    alert('No categories found.');
+                }
+            }).fail(function () {
+                alert('Failed to fetch categories.');
+            });
+        }
+
+        // Create new category
+        $('#saveCategory').click(function () {
+            const name = $('#newCategoryName').val();
+            const description = $('#newCategoryDescription').val();
+            $.ajax({
+                url: '/category/create-category',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ name, description }),
+                success: function () {
+                    $('#createCategoryModal').modal('hide');
+                    fetchCategories();
+                },
+                error: function () {
+                    alert('Category with that name already exist!');
+                }
+            });
+        });
+
+        // Populate update modal with category data
+        $(document).on('click', '.updateCategoryBtn', function () {
+            $('#updateCategoryName').val($(this).data('name'));
+            $('#updateCategoryDescription').val($(this).data('description'));
+            $('#updateCategory').data('id', $(this).data('id'));
+        });
+
+        // Update category
+        $('#updateCategory').click(function () {
+            const id = $(this).data('id');
+            const name = $('#updateCategoryName').val();
+            const description = $('#updateCategoryDescription').val();
+            $.ajax({
+                url: `/category/update-category`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({id, name, description }),
+                success: function () {
+                    $('#updateCategoryModal').modal('hide');
+                    fetchCategories();
+                },
+                error: function () {
+                    alert('Failed to update.');
+                }
+            });
+        });
+
+        // Search by category name
+        $('#searchCategory').click(function () {
+            let categoryName = $('#searchCategoryName').val();
+            $.get(`/category/get-category-by-name/${categoryName}`, function(data) {
+                if (data.data) {
+                    let searchResultsContainer = $('#searchResults');
+                    searchResultsContainer.empty(); // Clear previous categories
+                    searchResultsContainer.append(`
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">${data.data.name}</h5>
+                                <p class="card-text">${data.data.description}</p>
+                                <button class="btn btn-warning btn-sm updateCategoryBtn"
+                                        data-id="${data.id}"
+                                        data-name="${data.name}"
+                                        data-description="${data.description}"
+                                        data-toggle="modal"
+                                        data-target="#updateCategoryModal">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                }
+            }).fail(function() {
+                $('#searchResults').html('<div class="alert alert-warning">No categories found</div>');
+            });
+        });
+    });
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
