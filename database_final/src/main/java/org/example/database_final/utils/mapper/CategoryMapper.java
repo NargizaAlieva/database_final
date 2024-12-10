@@ -1,7 +1,7 @@
 package org.example.database_final.utils.mapper;
 
-import org.example.dp_project.dto.CategoryDto;
-import org.example.dp_project.entity.Category;
+import org.example.database_final.dto.CategoryDto;
+import org.example.database_final.entity.Category;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

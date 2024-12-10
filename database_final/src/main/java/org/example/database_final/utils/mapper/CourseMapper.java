@@ -1,12 +1,12 @@
 package org.example.database_final.utils.mapper;
 
-import org.example.dp_project.dto.CourseDtoRequest;
-import org.example.dp_project.dto.CourseDtoResponse;
-import org.example.dp_project.entity.Category;
-import org.example.dp_project.entity.Course;
-import org.example.dp_project.entity.Instructor;
-import org.example.dp_project.service.CategoryService;
-import org.example.dp_project.service.InstructorService;
+import org.example.database_final.dto.CourseDtoRequest;
+import org.example.database_final.dto.CourseDtoResponse;
+import org.example.database_final.entity.Category;
+import org.example.database_final.entity.Course;
+import org.example.database_final.entity.Instructor;
+import org.example.database_final.service.CategoryService;
+import org.example.database_final.service.InstructorService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
