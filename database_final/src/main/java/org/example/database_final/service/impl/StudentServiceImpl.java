@@ -9,7 +9,9 @@ import org.example.database_final.utils.exception.ObjectNotFoundException;
 import org.example.database_final.utils.mapper.StudentMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -87,5 +89,17 @@ public class StudentServiceImpl implements StudentService {
             newStudent.setDateOfBirth(oldStudent.getDateOfBirth());
 
         return studentMapper.entityToDto(save(newStudent));
+    }
+
+    /**
+     * Sorts students by name.
+     *
+     * @return a list of student DTO responses sorted by name.
+     */
+    @Override
+    public List<StudentDto> sortByName() {
+        return getAllStudents().stream()
+                .sorted(Comparator.comparing(StudentDto::getName)) // Sort by course name
+                .collect(Collectors.toList());
     }
 }

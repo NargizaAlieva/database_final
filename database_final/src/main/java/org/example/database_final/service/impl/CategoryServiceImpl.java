@@ -1,6 +1,7 @@
 package org.example.database_final.service.impl;
 
 import org.example.database_final.dto.CategoryDto;
+import org.example.database_final.dto.CourseDtoResponse;
 import org.example.database_final.entity.Category;
 import org.example.database_final.repository.CategoryRepository;
 import org.example.database_final.service.CategoryService;
@@ -9,7 +10,9 @@ import org.example.database_final.utils.exception.ObjectNotFoundException;
 import org.example.database_final.utils.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing categories.
@@ -159,5 +162,17 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return categoryMapper.entityToDto(save(newCategory));
+    }
+
+    /**
+     * Sorts categories by name.
+     *
+     * @return a list of category DTO responses sorted by name.
+     */
+    @Override
+    public List<CategoryDto> sortByName() {
+        return getAllCategories().stream()
+                .sorted(Comparator.comparing(CategoryDto::getName)) // Sort by course name
+                .collect(Collectors.toList());
     }
 }

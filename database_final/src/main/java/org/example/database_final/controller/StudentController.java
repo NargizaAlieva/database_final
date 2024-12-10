@@ -63,4 +63,13 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Student is not updated. " + exception.getMessage(), null));
         }
     }
+
+    @GetMapping(value = "/sort-by-name")
+    public ResponseEntity<Response> sortByName() {
+        try {
+            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", studentService.sortByName()));
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedbacks. " + exception.getMessage(), null));
+        }
+    }
 }

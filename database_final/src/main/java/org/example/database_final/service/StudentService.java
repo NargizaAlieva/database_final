@@ -16,4 +16,6 @@ public interface StudentService {
 
     StudentDto createStudent(StudentDto instructorDto);
     StudentDto updateStudent(StudentDto instructorDto);
+
+    List<StudentDto> sortByName();
 }
