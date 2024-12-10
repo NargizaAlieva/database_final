@@ -1,8 +1,8 @@
 package org.example.database_final.controller;
 
-import org.example.dp_project.dto.*;
-import org.example.dp_project.service.CourseService;
-import org.example.dp_project.utils.exception.ObjectNotFoundException;
+import org.example.database_final.dto.*;
+import org.example.database_final.service.CourseService;
+import org.example.database_final.utils.exception.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
