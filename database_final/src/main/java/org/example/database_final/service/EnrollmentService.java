@@ -13,6 +13,7 @@ public interface EnrollmentService {
     List<EnrollmentDto> getAllEnrollments();
 
     EnrollmentDto createEnrollment(EnrollmentDto enrollmentDtoRequest);
+    void deleteEnrollment(Long courseId,String studentName);
 
     List<EnrollmentDto> sortByEnrollmentDate(List<EnrollmentDto> enrollmentDtoList);
     List<EnrollmentDto> sortByCompletionStatus(Boolean completionStatus, List<EnrollmentDto> enrollmentDtoList);

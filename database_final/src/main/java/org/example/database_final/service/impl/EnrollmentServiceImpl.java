@@ -62,6 +62,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    public void deleteEnrollment(Long courseId,String studentName) {
+        Enrollment enrollment = enrollmentRepository.findByStudentNameAndCourseId(studentName, courseId);
+        enrollmentRepository.delete(enrollment);
+    }
+
+    @Override
     public List<EnrollmentDto> sortByEnrollmentDate(List<EnrollmentDto> enrollmentDtoList) {
         return enrollmentDtoList.stream()
                 .sorted(Comparator.comparing(EnrollmentDto::getEnrollmentDate))

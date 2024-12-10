@@ -19,7 +19,7 @@ public class EnrollmentController {
     }
 
     @GetMapping(value = "/get-enrollment-by-course-id/{courseId}")
-    public ResponseEntity<Response> getFeedbackByCourseId(@PathVariable Long courseId) {
+    public ResponseEntity<Response> getEnrollmentByCourseId(@PathVariable Long courseId) {
         try {
             return ResponseEntity.ok(new Response("Successfully get Enrollment.", enrollmentService.getEnrollmentByCourseId(courseId)));
         } catch (Exception exception) {
@@ -28,7 +28,7 @@ public class EnrollmentController {
     }
 
     @GetMapping(value = "/get-enrollment-by-student-id/{studentId}")
-    public ResponseEntity<Response> getFeedbackByStudentId(@PathVariable Long studentId) {
+    public ResponseEntity<Response> getEnrollmentByStudentId(@PathVariable Long studentId) {
         try {
             return ResponseEntity.ok(new Response("Successfully get Enrollment.", enrollmentService.getEnrollmentByStudentId(studentId)));
         } catch (Exception exception) {
@@ -37,7 +37,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/get-all-enrollment")
-    public ResponseEntity<Response> getAllFeedback() {
+    public ResponseEntity<Response> getAllEnrollment() {
         try {
             return ResponseEntity.ok(new Response("Successfully got all Enrollments.", enrollmentService.getAllEnrollments()));
         } catch (ObjectNotFoundException exception) {
@@ -46,12 +46,22 @@ public class EnrollmentController {
     }
 
     @PostMapping(value = "/create-enrollment")
-    public ResponseEntity<Response> createFeedback(@RequestBody EnrollmentDto request) {
+    public ResponseEntity<Response> createEnrollment(@RequestBody EnrollmentDto request) {
         try {
             EnrollmentDto enrollmentDto = enrollmentService.createEnrollment(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(new Response("Successfully created Enrollment.", enrollmentDto));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Course is not saved. " + exception.getMessage(), null));
+        }
+    }
+
+    @DeleteMapping(value = "/delete-enrollment/{courseId}/{studentName}")
+    public ResponseEntity<Response> deleteEnrollment(@PathVariable Long courseId, @PathVariable String studentName) {
+        try {
+            enrollmentService.deleteEnrollment(courseId, studentName);
+            return ResponseEntity.ok(new Response("Deleted Enrollment successfully.", null));
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Enrollment is not deleted. " + exception.getMessage(), null));
         }
     }
 
