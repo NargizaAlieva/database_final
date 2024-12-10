@@ -118,7 +118,7 @@
         fetchStudents();
 
         function fetchStudents() {
-            $.get('/student/get-all-student', function (response) {
+            $.get('/student/sort-by-name', function (response) {
                 if (response.data) {
                     const studentsContainer = $('#students');
                     studentsContainer.empty(); // Clear previous students
