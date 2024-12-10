@@ -118,7 +118,7 @@
         fetchInstructors();
 
         function fetchInstructors() {
-            $.get('/instructor/get-all-instructor', function (response) {
+            $.get('/instructor/sort-by-name', function (response) {
                 if (response.data) {
                     const instructorsContainer = $('#instructors');
                     instructorsContainer.empty(); // Clear previous instructors
