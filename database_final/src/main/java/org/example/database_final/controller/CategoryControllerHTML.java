@@ -6,24 +6,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller()
 public class CategoryControllerHTML {
 
-    @GetMapping("/categories")
+    @GetMapping("/category")
     public String categories() {
         return "category.html";
     }
 
-    @GetMapping("/courses")
+    @GetMapping("/course")
     public String courses() {
-        return "courses.html";
+        return "course.html";
     }
 
-    @GetMapping("/instructors")
+    @GetMapping("/instructor")
     public String instructors() {
         return "instructor.html";
     }
 
-    @GetMapping("/students")
+    @GetMapping("/student")
     public String students() {
         return "student.html";
     }
-
+    @GetMapping("/feedback")
+    public String feedbacks() {
+        return "feedback.html";
+    }
 }
