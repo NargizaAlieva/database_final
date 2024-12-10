@@ -52,11 +52,11 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     Optional<Instructor> findByName(String name);
 
     /**
-     * Finds instructors whose names contain the specified string (case insensitive).
+     * Finds instructors whose names contain the specified string.
      *
      * @param name The name fragment to search for within instructor names.
      * @return A list of instructors with names containing the specified string.
      */
-    @Query("SELECT i FROM Instructor i WHERE LOWER(i.name) LIKE %LOWER(?1)%")
+    @Query("SELECT i FROM Instructor i WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', ?1, '%'))")
     List<Instructor> findByNameContains(String name);
 }

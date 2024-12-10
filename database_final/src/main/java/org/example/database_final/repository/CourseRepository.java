@@ -39,7 +39,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
      * @param title The title to search for within course titles.
      * @return A list of courses with titles containing the specified string.
      */
-    @Query("SELECT c FROM Course c WHERE LOWER(c.title) LIKE %LOWER(?1)%")
+    @Query("SELECT c FROM Course c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', ?1, '%'))")
     List<Course> findByNameContains(String title);
 
     /**
