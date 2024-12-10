@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Student Manager</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Student Management</h1>
+
+    <div class="text-right mb-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createStudentModal">Create New Student</button>
+    </div>
+
+    <div class="text-right mb-3">
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">Search Student by Name</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchStudentName" placeholder="Enter student name">
+                </div>
+                <button id="searchStudent" class="btn btn-info btn-block">Search Student</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchResults" class="mt-4">
+        <!-- Search results will be displayed here -->
+    </div>
+
+    <hr class="mt-4">
+
+    <div class="row" id="students">
+        <!-- Students will be dynamically populated here -->
+    </div>
+</div>
+
+<!-- Create Student Modal -->
+<div class="modal fade" id="createStudentModal" tabindex="-1" role="dialog" aria-labelledby="createStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="createStudentModalLabel">Create New Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createStudentForm">
+                    <div class="form-group">
+                        <label for="newStudentName">Student Name</label>
+                        <input type="text" class="form-control" id="newStudentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentEmail">Student Email</label>
+                        <input type="email" class="form-control" id="newStudentEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentDateOfBirth">Date of Birth</label>
+                        <input type="date" class="form-control" id="newStudentDateOfBirth" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveStudent">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Student Modal -->
+<div class="modal fade" id="updateStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="updateStudentModalLabel">Update Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateStudentForm">
+                    <div class="form-group">
+                        <label for="updateStudentName">Student Name</label>
+                        <input type="text" class="form-control" id="updateStudentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateStudentEmail">Student Email</label>
+                        <input type="email" class="form-control" id="updateStudentEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateStudentDateOfBirth">Date of Birth</label>
+                        <input type="date" class="form-control" id="updateStudentDateOfBirth" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="updateStudent">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Fetch and display all students on page load
+        fetchStudents();
+
+        function fetchStudents() {
+            $.get('/student/get-all-student', function (response) {
+                if (response.data) {
+                    const studentsContainer = $('#students');
+                    studentsContainer.empty(); // Clear previous students
+                    response.data.forEach(student => {
+                        studentsContainer.append(`
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${student.name}</h5>
+                                    <p class="card-text">${student.email}</p>
+                                    <p class="card-text">Date of Birth: ${student.dateOfBirth}</p>
+                                    <button class="btn btn-warning btn-sm updateStudentBtn"
+                                            data-id="${student.id}"
+                                            data-name="${student.name}"
+                                            data-email="${student.email}"
+                                            data-dateofbirth="${student.dateOfBirth}"
+                                            data-toggle="modal"
+                                            data-target="#updateStudentModal">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    });
+                } else {
+                    alert('No students found.');
+                }
+            }).fail(function () {
+                alert('Failed to fetch students.');
+            });
+        }
+
+        // Create new student
+        $('#saveStudent').click(function () {
+            const name = $('#newStudentName').val();
+            const email = $('#newStudentEmail').val();
+            const dateOfBirth = $('#newStudentDateOfBirth').val();
+            $.ajax({
+                url: '/student/create-student',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ name, email, dateOfBirth }),
+                success: function () {
+                    $('#createStudentModal').modal('hide');
+                    fetchStudents();
+                },
+                error: function () {
+                    alert('Failed to save student.');
+                }
+            });
+        });
+
+        // Populate update modal with student data
+        $(document).on('click', '.updateStudentBtn', function () {
+            $('#updateStudentName').val($(this).data('name'));
+            $('#updateStudentEmail').val($(this).data('email'));
+            $('#updateStudentDateOfBirth').val($(this).data('dateofbirth'));
+            $('#updateStudent').data('id', $(this).data('id'));
+        });
+
+        // Update student
+        $('#updateStudent').click(function () {
+            const id = $(this).data('id');
+            const name = $('#updateStudentName').val();
+            const email = $('#updateStudentEmail').val();
+            const dateOfBirth = $('#updateStudentDateOfBirth').val();
+            $.ajax({
+                url: `/student/update-student`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ id, name, email, dateOfBirth }),
+                success: function () {
+                    $('#updateStudentModal').modal('hide');
+                    fetchStudents();
+                },
+                error: function () {
+                    alert('Failed to update student.');
+                }
+            });
+        });
+
+        // Search by student name
+        $('#searchStudent').click(function () {
+            let studentName = $('#searchStudentName').val();
+            $.get(`/student/get-student-by-name/${studentName}`, function(data) {
+                if (data.data) {
+                    let searchResultsContainer = $('#searchResults');
+                    searchResultsContainer.empty(); // Clear previous results
+                    searchResultsContainer.append(`
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">${data.data.name}</h5>
+                                <p class="card-text">${data.data.email}</p>
+                                <p class="card-text">Date of Birth: ${data.data.dateOfBirth}</p>
+                                <button class="btn btn-warning btn-sm updateStudentBtn"
+                                        data-id="${data.data.id}"
+                                        data-name="${data.data.name}"
+                                        data-email="${data.data.email}"
+                                        data-dateofbirth="${data.data.dateOfBirth}"
+                                        data-toggle="modal"
+                                        data-target="#updateStudentModal">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    alert('Student not found.');
+                }
+            }).fail(function() {
+                alert('Failed to fetch student.');
+            });
+        });
+    });
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
