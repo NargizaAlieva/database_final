@@ -110,7 +110,7 @@
         fetchCategories();
 
         function fetchCategories() {
-            $.get('/category/get-all-category', function (response) {
+            $.get('/category/sort-by-name', function (response) {
                 if (response.data) {
                     const categoriesContainer = $('#categories');
                     categoriesContainer.empty(); // Clear previous categories
