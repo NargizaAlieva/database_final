@@ -57,4 +57,11 @@ public interface InstructorService {
      * @return The updated `InstructorDto` object.
      */
     InstructorDto updateInstructor(InstructorDto instructorDto);
+
+    /**
+     * Sorts instructors by name.
+     *
+     * @return A list of `InstructorDto` objects sorted by name.
+     */
+    List<InstructorDto> sortByName();
 }

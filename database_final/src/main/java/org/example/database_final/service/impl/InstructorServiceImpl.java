@@ -9,7 +9,9 @@ import org.example.database_final.utils.exception.ObjectNotFoundException;
 import org.example.database_final.utils.mapper.InstructorMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing instructors.
@@ -160,5 +162,17 @@ public class InstructorServiceImpl implements InstructorService {
         }
 
         return instructorMapper.entityToDto(save(newInstructor));
+    }
+
+    /**
+     * Sorts instructors by name.
+     *
+     * @return a list of instructor DTO responses sorted by name.
+     */
+    @Override
+    public List<InstructorDto> sortByName() {
+        return getAllInstructors().stream()
+                .sorted(Comparator.comparing(InstructorDto::getName)) // Sort by course name
+                .collect(Collectors.toList());
     }
 }

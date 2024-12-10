@@ -88,4 +88,18 @@ public class InstructorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Instructor is not updated. " + exception.getMessage(), null));
         }
     }
+
+    /**
+     * Retrieves and sorts instructors by name.
+     *
+     * @return a ResponseEntity containing a Response object with a sorted list of instructors by name or an error message.
+     */
+    @GetMapping(value = "/sort-by-name")
+    public ResponseEntity<Response> sortByName() {
+        try {
+            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", instructorService.sortByName()));
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedbacks. " + exception.getMessage(), null));
+        }
+    }
 }
