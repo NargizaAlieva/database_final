@@ -86,4 +86,13 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Category could not be updated. " + exception.getMessage(), null));
         }
     }
+
+    @GetMapping("/sort-by-name")
+    public ResponseEntity<Response> sortByName() {
+        try {
+            return ResponseEntity.ok(new Response("Successfully retrieved all Categories.", categoryService.sortByName()));
+        } catch (ObjectNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Couldn't find any Categories. " + exception.getMessage(), null));
+        }
+    }
 }

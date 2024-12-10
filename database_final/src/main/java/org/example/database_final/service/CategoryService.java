@@ -57,4 +57,11 @@ public interface CategoryService {
      * @return The updated `CategoryDto` object.
      */
     CategoryDto updateCategory(CategoryDto categoryDto);
+
+    /**
+     * Sorts categories by name.
+     *
+     * @return a list of category DTO responses sorted by name.
+     */
+    List<CategoryDto> sortByName();
 }
