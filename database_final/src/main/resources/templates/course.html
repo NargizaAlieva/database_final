@@ -177,6 +177,43 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" id="enrollMe">Enroll Me</button>
+                <button type="button" class="btn btn-danger" id="unenrollStudent">Unenroll</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Write Feedback Modal -->
+<div class="modal fade" id="writeFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="writeFeedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="writeFeedbackModalLabel">Write Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="writeFeedbackForm">
+                    <input type="hidden" id="feedbackCourseId">
+                    <div class="form-group">
+                        <label for="feedbackStudentName">Student Name</label>
+                        <input type="text" class="form-control" id="feedbackStudentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackComment">Comment</label>
+                        <textarea class="form-control" id="feedbackComment" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackRating">Rating (1.0 - 5.0)</label>
+                        <input type="number" class="form-control" id="feedbackRating" min="1.0" max="5.0" step="0.1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info" id="submitFeedback">Submit Feedback</button>
             </div>
         </div>
     </div>
@@ -204,8 +241,9 @@
                                         <p class="card-text">Instructor: ${course.instructorName}</p>
                                         <p class="card-text">Category: ${course.categoryName}</p>
                                         <p class="card-text">Duration: ${course.duration} hour</p>
-                                        <p class="card-text">Rating: ${course.averageRating}</p>
+                                        <p class="card-text">Average Rating: ${course.averageRating}</p>
                                         <p class="card-text">Enrollments: ${course.totalEnrollments}</p>
+                                        <p class="card-text">Creation Date: ${course.creationDate}</p>
                                         <p class="card-text">Price: ${course.price} com</p>
                                         <button class="btn btn-warning btn-sm updateCourseBtn"
                                                 data-id="${course.id}"
@@ -226,7 +264,14 @@
                                                 data-category="${course.price}"
                                                 data-toggle="modal"
                                                 data-target="#enrollMeModal">
-                                            Enroll Me
+                                            Enrollment
+                                        </button>
+                                        <button class="btn btn-info btn-sm writeFeedbackBtn"
+                                            data-id="${course.id}"
+                                            data-name="${course.title}"
+                                            data-toggle="modal"
+                                            data-target="#writeFeedbackModal">
+                                            Write Comment
                                         </button>
                                     </div>
                                 </div>
@@ -365,6 +410,22 @@
                                         data-target="#updateCourseModal">
                                     Update
                                 </button>
+                                <button class="btn btn-success btn-sm enrollMeBtn"
+                                                data-id="${course.id}"
+                                                data-name="${course.title}"
+                                                data-category="${course.categoryName}"
+                                                data-category="${course.price}"
+                                                data-toggle="modal"
+                                                data-target="#enrollMeModal">
+                                            Enrollment
+                                        </button>
+                                        <button class="btn btn-info btn-sm writeFeedbackBtn"
+                                            data-id="${course.id}"
+                                            data-name="${course.title}"
+                                            data-toggle="modal"
+                                            data-target="#writeFeedbackModal">
+                                            Write Comment
+                                        </button>
                             </div>
                         </div>
                     </div>
@@ -390,7 +451,30 @@
                     alert('Successfully enrolled in the course!');
                 },
                 error: function (response) {
-                    alert('Student with this name is not found');
+                    alert('Student with this name is not found or already enrolled');
+                }
+            });
+        });
+
+        $('#unenrollStudent').click(function () {
+            let studentName = $('#studentName').val();
+            let courseId = $('#courseId').val();
+
+            if (!studentName || !courseId) {
+                alert('Student name and course ID are required.');
+                return;
+            }
+
+            $.ajax({
+                url: `/enrollment/delete-enrollment/${courseId}/${studentName}`, // Separate the placeholders for course ID and student name
+                type: 'DELETE',
+                success: function() {
+                    alert('Successfully unenrolled from the course.');
+                    $('#enrollMeModal').modal('hide');
+                    fetchCourses();
+                },
+                error: function() {
+                    alert('This student is not enrolled to be unrolled!');
                 }
             });
         });
@@ -398,6 +482,34 @@
         // Sort Courses
         $('#sortCourses').click(function () {
             fetchCourses()
+        });
+
+        $(document).on('click', '.writeFeedbackBtn', function () {
+            $('#feedbackCourseId').val($(this).data('id'));
+            $('#feedbackStudentName').val(''); // Clear previous inputs
+            $('#feedbackComment').val('');
+            $('#feedbackRating').val('');
+        });
+
+        $('#submitFeedback').click(function () {
+            const courseId = $('#feedbackCourseId').val();
+            const studentName = $('#feedbackStudentName').val();
+            const comment = $('#feedbackComment').val();
+            const rating = $('#feedbackRating').val();
+
+            $.ajax({
+                url: '/feedback/create-feedback',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ courseId, studentName, comment, rating }),
+                success: function (response) {
+                    $('#writeFeedbackModal').modal('hide');
+                    alert('Feedback submitted successfully!');
+                },
+                error: function (response) {
+                    alert('Failed to submit feedback. Please try again.');
+                }
+            });
         });
     });
 
