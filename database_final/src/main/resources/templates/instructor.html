@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Instructor Manager</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Instructor Management</h1>
+
+    <div class="text-right mb-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createInstructorModal">Create New Instructor</button>
+    </div>
+
+    <div class="text-right mb-3">
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">Search Instructor by Name</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchInstructorName" placeholder="Enter instructor name">
+                </div>
+                <button id="searchInstructor" class="btn btn-info btn-block">Search Instructor</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchResults" class="row">
+        <!-- Search results will be displayed here -->
+    </div>
+
+    <hr class="mt-4">
+
+    <div class="row" id="instructors">
+        <!-- Instructors will be dynamically populated here -->
+    </div>
+</div>
+
+<!-- Create Instructor Modal -->
+<div class="modal fade" id="createInstructorModal" tabindex="-1" role="dialog" aria-labelledby="createInstructorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="createInstructorModalLabel">Create New Instructor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createInstructorForm">
+                    <div class="form-group">
+                        <label for="newInstructorName">Instructor Name</label>
+                        <input type="text" class="form-control" id="newInstructorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newInstructorEmail">Instructor Email</label>
+                        <input type="email" class="form-control" id="newInstructorEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newInstructorBio">Instructor Bio</label>
+                        <input type="text" class="form-control" id="newInstructorBio" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveInstructor">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Instructor Modal -->
+<div class="modal fade" id="updateInstructorModal" tabindex="-1" role="dialog" aria-labelledby="updateInstructorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="updateInstructorModalLabel">Update Instructor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateInstructorForm">
+                    <div class="form-group">
+                        <label for="updateInstructorName">Instructor Name</label>
+                        <input type="text" class="form-control" id="updateInstructorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateInstructorEmail">Instructor Email</label>
+                        <input type="email" class="form-control" id="updateInstructorEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateInstructorBio">Instructor Bio</label>
+                        <input type="text" class="form-control" id="updateInstructorBio" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="updateInstructor">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Fetch and display all instructors on page load
+        fetchInstructors();
+
+        function fetchInstructors() {
+            $.get('/instructor/get-all-instructor', function (response) {
+                if (response.data) {
+                    const instructorsContainer = $('#instructors');
+                    instructorsContainer.empty(); // Clear previous instructors
+                    response.data.forEach(instructor => {
+                        instructorsContainer.append(`
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${instructor.name}</h5>
+                                    <p class="card-text">${instructor.email}</p>
+                                    <p class="card-text">${instructor.bio}</p>
+                                    <button class="btn btn-warning btn-sm updateInstructorBtn"
+                                            data-id="${instructor.id}"
+                                            data-name="${instructor.name}"
+                                            data-email="${instructor.email}"
+                                            data-bio="${instructor.bio}"
+                                            data-toggle="modal"
+                                            data-target="#updateInstructorModal">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    });
+                }
+            }).fail(function () {
+                alert('No instructors found.');
+            });
+        }
+
+        // Create new instructor
+        $('#saveInstructor').click(function () {
+            const name = $('#newInstructorName').val();
+            const email = $('#newInstructorEmail').val();
+            const bio = $('#newInstructorBio').val();
+            $.ajax({
+                url: '/instructor/create-instructor',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ name, email, bio }),
+                success: function () {
+                    $('#createInstructorModal').modal('hide');
+                    fetchInstructors();
+                },
+                error: function () {
+                    alert('Instructor with that email already exists!');
+                }
+            });
+        });
+
+        // Populate update modal with instructor data
+        $(document).on('click', '.updateInstructorBtn', function () {
+            $('#updateInstructorName').val($(this).data('name'));
+            $('#updateInstructorEmail').val($(this).data('email'));
+            $('#updateInstructorBio').val($(this).data('bio'));
+            $('#updateInstructor').data('id', $(this).data('id'));
+        });
+
+        // Update instructor
+        $('#updateInstructor').click(function () {
+            const id = $(this).data('id');
+            const name = $('#updateInstructorName').val();
+            const email = $('#updateInstructorEmail').val();
+            const bio = $('#updateInstructorBio').val();
+            $.ajax({
+                url: `/instructor/update-instructor`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ id, name, email, bio }),
+                success: function () {
+                    $('#updateInstructorModal').modal('hide');
+                    fetchInstructors();
+                },
+                error: function () {
+                    alert('Instructor with that email already exists!');
+                }
+            });
+        });
+
+        // Search by instructor name
+        $('#searchInstructor').click(function () {
+            let instructorName = $('#searchInstructorName').val();
+            $.get(`/instructor/get-instructor-by-name/${instructorName}`, function (response) {
+                if (response.data) {
+                    let searchResultsContainer = $('#searchResults');
+                    searchResultsContainer.empty(); // Clear previous instructors
+                    response.data.forEach(instructor => {
+                        searchResultsContainer.append(`
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${instructor.name}</h5>
+                                    <p class="card-text">${instructor.email}</p>
+                                    <p class="card-text">${instructor.bio}</p>
+                                    <button class="btn btn-warning btn-sm updateInstructorBtn"
+                                            data-id="${instructor.id}"
+                                            data-name="${instructor.name}"
+                                            data-email="${instructor.email}"
+                                            data-bio="${instructor.bio}"
+                                            data-toggle="modal"
+                                            data-target="#updateInstructorModal">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    });
+                } else {
+                    $('#searchResults').html('<div class="alert alert-warning">No instructors found</div>');
+                }
+            }).fail(function () {
+                $('#searchResults').html('<div class="alert alert-warning">Failed to fetch instructor data</div>');
+            });
+        });
+    });
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
