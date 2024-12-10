@@ -7,13 +7,14 @@ import java.util.List;
 
 public interface FeedbackService {
     Feedback getFeedbackById(Long id);
-    List<FeedbackDto> getFeedbackByCourseId(Long courseId);
-    List<FeedbackDto> getFeedbackByStudentId(Long studentId);
+    List<FeedbackDto> getFeedbackByCourseName(String courseName);
+    List<FeedbackDto> getFeedbackByStudentName(String studentName);
     List<FeedbackDto> getAllFeedbacks();
 
     FeedbackDto createFeedback(FeedbackDto feedbackDtoRequest);
     FeedbackDto updateFeedback(FeedbackDto feedbackDtoRequest);
+    void deleteFeedback(Long id);
 
-    List<FeedbackDto> sortByRating(List<FeedbackDto> feedbackDtoList);
-    List<FeedbackDto> sortByFeedbackDate(List<FeedbackDto> feedbackDtoList);
+    List<FeedbackDto> sortByRating();
+    List<FeedbackDto> sortByFeedbackDate();
 }

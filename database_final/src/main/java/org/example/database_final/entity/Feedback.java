@@ -2,8 +2,8 @@ package org.example.database_final.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "feedback")
@@ -19,7 +19,7 @@ public class Feedback {
     private String comment;
 
     @Column(name = "feedback_date")
-    private Timestamp feedbackDate;
+    private LocalDate feedbackDate;
 
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
@@ -34,7 +34,7 @@ public class Feedback {
 
     @PrePersist
     private void prePersist() {
-        feedbackDate = Timestamp.from(Instant.now());
+        feedbackDate = LocalDate.now();
     }
 
     public Long getId() {
@@ -64,11 +64,11 @@ public class Feedback {
         return this;
     }
 
-    public Timestamp getFeedbackDate() {
+    public LocalDate getFeedbackDate() {
         return feedbackDate;
     }
 
-    public Feedback setFeedbackDate(Timestamp feedbackDate) {
+    public Feedback setFeedbackDate(LocalDate feedbackDate) {
         this.feedbackDate = feedbackDate;
         return this;
     }

@@ -18,19 +18,19 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-    @GetMapping(value = "/get-feedback-by-course-id/{courseId}")
-    public ResponseEntity<Response> getFeedbackByCourseId(@PathVariable Long courseId) {
+    @GetMapping(value = "/get-feedback-by-course-name/{courseName}")
+    public ResponseEntity<Response> getFeedbackByCourseName(@PathVariable String courseName) {
         try {
-            return ResponseEntity.ok(new Response("Successfully get Feedback.", feedbackService.getFeedbackByCourseId(courseId)));
+            return ResponseEntity.ok(new Response("Successfully get Feedback.", feedbackService.getFeedbackByCourseName(courseName)));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedback. " + exception.getMessage(), null));
         }
     }
 
-    @GetMapping(value = "/get-feedback-by-student-id/{studentId}")
-    public ResponseEntity<Response> getFeedbackByStudentId(@PathVariable Long studentId) {
+    @GetMapping(value = "/get-feedback-by-student-name/{studentName}")
+    public ResponseEntity<Response> getFeedbackByStudentName(@PathVariable String studentName) {
         try {
-            return ResponseEntity.ok(new Response("Successfully get Feedback.", feedbackService.getFeedbackByStudentId(studentId)));
+            return ResponseEntity.ok(new Response("Successfully get Feedback.", feedbackService.getFeedbackByStudentName(studentName)));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedback. " + exception.getMessage(), null));
         }
@@ -51,7 +51,7 @@ public class FeedbackController {
             FeedbackDto feedbackDtoResponse = feedbackService.createFeedback(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(new Response("Successfully created Feedback.", feedbackDtoResponse));
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Course is not saved. " + exception.getMessage(), null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Feedback is not saved. " + exception.getMessage(), null));
         }
     }
 
@@ -61,23 +61,33 @@ public class FeedbackController {
             FeedbackDto feedbackDtoResponse = feedbackService.updateFeedback(request);
             return ResponseEntity.ok(new Response("Updated Feedback successfully.", feedbackDtoResponse));
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Course is not updated. " + exception.getMessage(), null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Feedback is not updated. " + exception.getMessage(), null));
+        }
+    }
+
+    @DeleteMapping(value = "/delete-feedback/{feedbackId}")
+    public ResponseEntity<Response> deleteFeedback(@PathVariable Long feedbackId) {
+        try {
+            feedbackService.deleteFeedback(feedbackId);
+            return ResponseEntity.ok(new Response("Deleted Feedback successfully.", null));
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Feedback is not deleted. " + exception.getMessage(), null));
         }
     }
 
     @GetMapping(value = "/sort-by-rating")
-    public ResponseEntity<Response> sortByRating(@RequestBody List<FeedbackDto> feedbackDtoList) {
+    public ResponseEntity<Response> sortByRating() {
         try {
-            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", feedbackService.sortByRating(feedbackDtoList)));
+            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", feedbackService.sortByRating()));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedbacks. " + exception.getMessage(), null));
         }
     }
 
     @GetMapping(value = "/sort-by-date")
-    public ResponseEntity<Response> sortByDate(@RequestBody List<FeedbackDto> feedbackDtoList) {
+    public ResponseEntity<Response> sortByDate() {
         try {
-            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", feedbackService.sortByFeedbackDate(feedbackDtoList)));
+            return ResponseEntity.ok(new Response("Successfully get Feedbacks.", feedbackService.sortByFeedbackDate()));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response("Failed to get Feedbacks. " + exception.getMessage(), null));
         }

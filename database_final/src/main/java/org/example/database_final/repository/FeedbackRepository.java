@@ -14,8 +14,9 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     boolean isIdExist(Long id);
     @Query("SELECT f FROM Feedback f WHERE f.id = ?1")
     Optional<Feedback> findById(Long id);
-    @Query("SELECT f FROM Feedback f WHERE f.feedbackStudent.id = ?1")
-    List<Feedback> findByStudentId(Long studentId);
-    @Query("SELECT f FROM Feedback f WHERE f.feedbackCourse.id = ?1")
-    List<Feedback> findByCourseId(Long courseId);
+    @Query("SELECT f FROM Feedback f JOIN Student s ON f.feedbackStudent.id = s.id WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', ?1, '%'))")
+    List<Feedback> findByStudentName(String studentId);
+    @Query("SELECT f FROM Feedback f JOIN Course c ON f.feedbackCourse.id = c.id WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', ?1, '%'))")
+    List<Feedback> findByCourseName(String courseName);
+
 }

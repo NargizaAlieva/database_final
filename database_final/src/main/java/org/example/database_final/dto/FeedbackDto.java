@@ -1,13 +1,15 @@
 package org.example.database_final.dto;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class FeedbackDto {
     private Long id;
     private Double rating;
     private String comment;
-    private Timestamp feedbackDate;
+    private LocalDate feedbackDate;
     private String studentName;
+    private Long courseId;
     private String courseName;
 
     public FeedbackDto() {}
@@ -39,11 +41,11 @@ public class FeedbackDto {
         return this;
     }
 
-    public Timestamp getFeedbackDate() {
+    public LocalDate getFeedbackDate() {
         return feedbackDate;
     }
 
-    public FeedbackDto setFeedbackDate(Timestamp feedbackDate) {
+    public FeedbackDto setFeedbackDate(LocalDate feedbackDate) {
         this.feedbackDate = feedbackDate;
         return this;
     }
@@ -54,6 +56,15 @@ public class FeedbackDto {
 
     public FeedbackDto setStudentName(String studentName) {
         this.studentName = studentName;
+        return this;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public FeedbackDto setCourseId(Long courseId) {
+        this.courseId = courseId;
         return this;
     }
 

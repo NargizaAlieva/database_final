@@ -6,6 +6,7 @@ import org.example.database_final.service.CourseService;
 import org.example.database_final.service.StudentService;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,8 @@ public class FeedbackMapper {
         feedbackDto.setComment(feedback.getComment());
         feedbackDto.setFeedbackDate(feedback.getFeedbackDate());
         feedbackDto.setRating(feedback.getRating());
-        feedbackDto.setCourseName(feedback.getFeedbackCourse().getTitle());
+        feedbackDto.setCourseId(feedback.getFeedbackCourse().getId());
+        feedbackDto.setCourseName(courseService.getCourseById(feedback.getFeedbackCourse().getId()).getTitle());
         feedbackDto.setStudentName(feedback.getFeedbackStudent().getName());
         return feedbackDto;
     }
@@ -40,7 +42,7 @@ public class FeedbackMapper {
         feedback.setComment(feedbackDto.getComment());
         feedback.setFeedbackDate(feedbackDto.getFeedbackDate());
         feedback.setRating(feedbackDto.getRating());
-        feedback.setFeedbackCourse(courseService.getCourseEntityByName(feedbackDto.getCourseName()));
+        feedback.setFeedbackCourse(courseService.getCourseById(feedbackDto.getCourseId()));
         feedback.setFeedbackStudent(studentService.getStudentEntityByName(feedbackDto.getStudentName()));
         return feedback;
     }

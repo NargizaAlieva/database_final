@@ -40,13 +40,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackDto> getFeedbackByCourseId(Long courseId) {
-        return feedbackMapper.entityToDtoList(feedbackRepository.findByCourseId(courseId));
+    public List<FeedbackDto> getFeedbackByCourseName(String courseName) {
+        return feedbackMapper.entityToDtoList(feedbackRepository.findByCourseName(courseName));
     }
 
     @Override
-    public List<FeedbackDto> getFeedbackByStudentId(Long studentId) {
-        return feedbackMapper.entityToDtoList(feedbackRepository.findByStudentId(studentId));
+    public List<FeedbackDto> getFeedbackByStudentName(String studentName) {
+        return feedbackMapper.entityToDtoList(feedbackRepository.findByStudentName(studentName));
     }
 
     @Override
@@ -79,15 +79,21 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackDto> sortByRating(List<FeedbackDto> feedbackDtoList) {
-        return feedbackDtoList.stream()
+    public void deleteFeedback(Long id) {
+        Feedback feedback = getFeedbackById(id);
+        feedbackRepository.delete(feedback);
+    }
+
+    @Override
+    public List<FeedbackDto> sortByRating() {
+        return getAllFeedbacks().stream()
                 .sorted(Comparator.comparing(FeedbackDto::getRating))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<FeedbackDto> sortByFeedbackDate(List<FeedbackDto> feedbackDtoList) {
-        return feedbackDtoList.stream()
+    public List<FeedbackDto> sortByFeedbackDate() {
+        return getAllFeedbacks().stream()
                 .sorted(Comparator.comparing(FeedbackDto::getFeedbackDate))
                 .collect(Collectors.toList());
     }
