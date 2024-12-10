@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div id="searchResults" class="mt-4">
+    <div id="searchResults" class="row">
         <!-- Search results will be displayed here -->
     </div>
 
@@ -190,7 +190,7 @@
                 url: `/student/update-student`,
                 type: 'PUT',
                 contentType: 'application/json',
-                data: JSON.stringify({ id, name, email, dateOfBirth }),
+                data: JSON.stringify({id, name, email, dateOfBirth }),
                 success: function () {
                     $('#updateStudentModal').modal('hide');
                     fetchStudents();
@@ -208,29 +208,31 @@
                 if (data.data) {
                     let searchResultsContainer = $('#searchResults');
                     searchResultsContainer.empty(); // Clear previous results
-                    searchResultsContainer.append(`
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">${data.data.name}</h5>
-                                <p class="card-text">${data.data.email}</p>
-                                <p class="card-text">Date of Birth: ${data.data.dateOfBirth}</p>
-                                <button class="btn btn-warning btn-sm updateStudentBtn"
-                                        data-id="${data.data.id}"
-                                        data-name="${data.data.name}"
-                                        data-email="${data.data.email}"
-                                        data-dateofbirth="${data.data.dateOfBirth}"
-                                        data-toggle="modal"
-                                        data-target="#updateStudentModal">
-                                    Update
-                                </button>
+                    data.data.forEach(student => {
+                        searchResultsContainer.append(`
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${student.name}</h5>
+                                    <p class="card-text">${student.email}</p>
+                                    <p class="card-text">Date of Birth: ${student.dateOfBirth}</p>
+                                    <button class="btn btn-warning btn-sm updateStudentBtn"
+                                            data-id="${student.id}"
+                                            data-name="${student.name}"
+                                            data-email="${student.email}"
+                                            data-dateofbirth="${student.dateOfBirth}"
+                                            data-toggle="modal"
+                                            data-target="#updateStudentModal">
+                                        Update
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    `);
-                } else {
-                    alert('Student not found.');
+                        `);
+                    });
                 }
-            }).fail(function() {
-                alert('Failed to fetch student.');
+            }).fail(function () {
+                $('#searchResults').html('<div class="alert alert-warning">No student found.</div>');
             });
         });
     });
