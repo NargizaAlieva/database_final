@@ -69,48 +69,59 @@ To create a platform that manages online courses, students, instructors, enrollm
 ### 5.2 SQL Scripts:
 #### DDL Scripts:
 ```sql
-CREATE DATABASE SmartELearning;
-CREATE TABLE Instructor (
+CREATE DATABASE brain_rush;
+CREATE TABLE IF NOT EXISTS Instructor (
     ID BIGSERIAL PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) UNIQUE NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
-    Bio TEXT
+    Bio TEXT,
+    Registration_Date DATE DEFAULT CURRENT_DATE
 );
-CREATE TABLE Category (
+
+CREATE TABLE IF NOT EXISTS Category (
     ID BIGSERIAL PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) UNIQUE NOT NULL,
     Description TEXT
 );
-CREATE TABLE Course (
+
+CREATE TABLE IF NOT EXISTS Course (
     ID BIGSERIAL PRIMARY KEY,
     Title VARCHAR(200) NOT NULL,
     Description TEXT,
     Duration INT NOT NULL,
-    Price NUMERIC(10, 2) NOT NULL,
-    InstructorID INT REFERENCES Instructor(ID),
-    CategoryID INT REFERENCES Category(ID),
-    TotalEnrollments INT DEFAULT 0,
-    AverageRating NUMERIC(3, 2) DEFAULT 0.0
+    Price INT NOT NULL,
+    Instructor_ID BIGINT REFERENCES Instructor(ID) ON DELETE SET NULL,
+    Category_ID BIGINT REFERENCES Category(ID) ON DELETE SET NULL,
+    Total_Enrollments INT DEFAULT 0 CHECK (Total_Enrollments >= 0),
+    Average_Rating FLOAT DEFAULT 0.0 CHECK (Average_Rating BETWEEN 0 AND 5),
+    Creation_Date DATE DEFAULT CURRENT_DATE
 );
-CREATE TABLE Student (
+
+CREATE TABLE IF NOT EXISTS Student (
     ID BIGSERIAL PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) UNIQUE NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
-    DateOfBirth DATE NOT NULL,
-    RegistrationDate DATE DEFAULT CURRENT_DATE
+    Date_Of_Birth DATE NOT NULL,
+    Registration_Date DATE DEFAULT CURRENT_DATE
 );
-CREATE TABLE Enrollment (
+
+CREATE TABLE IF NOT EXISTS Enrollment (
     ID BIGSERIAL PRIMARY KEY,
-    StudentID INT REFERENCES Student(ID),
-    CourseID INT REFERENCES Course(ID),
-    EnrollmentDate DATE DEFAULT CURRENT_DATE,
-    CompletionStatus BOOLEAN DEFAULT FALSE
+    Student_ID BIGINT REFERENCES Student(ID) ON DELETE CASCADE,
+    Course_ID BIGINT REFERENCES Course(ID) ON DELETE CASCADE,
+    Enrollment_Date DATE DEFAULT CURRENT_DATE,
+    Completion_Status BOOLEAN DEFAULT FALSE,
+    UNIQUE (Student_ID, Course_ID)
 );
-CREATE TABLE Feedback (
-    ID SERIAL PRIMARY KEY,
-    StudentID INT REFERENCES Student(ID),
-    CourseID INT REFERENCES Course(ID),
-    Rating NUMERIC(3, 2) CHECK (Rating BETWEEN 1 AND 5),
+
+CREATE TABLE IF NOT EXISTS Feedback (
+    ID BIGSERIAL PRIMARY KEY,
+    Student_ID BIGINT REFERENCES Student(ID) ON DELETE CASCADE,
+    Course_ID BIGINT REFERENCES Course(ID) ON DELETE CASCADE,
+    Rating FLOAT NOT NULL CHECK (Rating BETWEEN 0 AND 5),
     Comment TEXT,
-    FeedbackDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    Feedback_Date DATE DEFAULT CURRENT_DATE
 );
+
+
+
