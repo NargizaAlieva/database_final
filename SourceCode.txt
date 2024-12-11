@@ -1,0 +1,5 @@
+github: https://github.com/NargizaAlieva/database_final
+
+frontend: http://localhost:8888/course
+
+presentation: https://www.canva.com/design/DAGY8r_2yS0/8OPSgiQP06J6wTbDAQwDXA/edit?utm_content=DAGY8r_2yS0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
