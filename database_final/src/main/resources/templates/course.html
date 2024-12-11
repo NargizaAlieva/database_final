@@ -353,8 +353,8 @@
                     $('#updateCourseModal').modal('hide');
                     fetchCourses();
                 },
-                error: function () {
-                    alert('Course with that name already exists!');
+                error: function (response) {
+                    alert("Incorrect input");
                 }
             });
         });
@@ -427,21 +427,21 @@
                                     Update
                                 </button>
                                 <button class="btn btn-success btn-sm enrollMeBtn"
-                                                data-id="${course.id}"
-                                                data-name="${course.title}"
-                                                data-category="${course.categoryName}"
-                                                data-category="${course.price}"
-                                                data-toggle="modal"
-                                                data-target="#enrollMeModal">
-                                            Enrollment
-                                        </button>
-                                        <button class="btn btn-info btn-sm writeFeedbackBtn"
-                                            data-id="${course.id}"
-                                            data-name="${course.title}"
-                                            data-toggle="modal"
-                                            data-target="#writeFeedbackModal">
-                                            Write Comment
-                                        </button>
+                                        data-id="${course.id}"
+                                        data-name="${course.title}"
+                                        data-category="${course.categoryName}"
+                                        data-category="${course.price}"
+                                        data-toggle="modal"
+                                        data-target="#enrollMeModal">
+                                    Enrollment
+                                </button>
+                                <button class="btn btn-info btn-sm writeFeedbackBtn"
+                                    data-id="${course.id}"
+                                    data-name="${course.title}"
+                                    data-toggle="modal"
+                                    data-target="#writeFeedbackModal">
+                                    Write Comment
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -521,9 +521,10 @@
                 success: function (response) {
                     $('#writeFeedbackModal').modal('hide');
                     alert('Feedback submitted successfully!');
+                    fetchCourses();
                 },
                 error: function (response) {
-                    alert('Failed to submit feedback. Please try again.');
+                    alert('Failed to submit feedback. Ensure that all fields filled correctly and that student name exist.');
                 }
             });
         });

@@ -67,7 +67,6 @@ BEGIN
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
--- Trigger to execute the function `update_average_rating_on_delete()` after a DELETE on `Feedback`
 CREATE TRIGGER after_feedback_delete
     AFTER DELETE ON Feedback
     FOR EACH ROW
