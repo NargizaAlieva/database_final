@@ -14,9 +14,8 @@ This document provides an overview of the Brain Rush project, covering the syste
 5. [Database Setup](#5-database-setup)
 6. [Backend Implementation (Java Spring Boot)](#6-backend-implementation-java-spring-boot)
 7. [Frontend Implementation (Thymeleaf)](#7-frontend-implementation-thymeleaf)
-8. [Security Implementation](#8-security-implementation)
-9. [Testing and Validation](#9-testing-and-validation)
-10. [Conclusion](#10-conclusion)
+8. [How to run our project](#8-how-to-run-our-project)
+9. [Maintanse project](#9-maintanse-project)
 
 ## 1. Project Overview
 ### 1.1 Title:
@@ -122,6 +121,87 @@ CREATE TABLE IF NOT EXISTS Feedback (
     Comment TEXT,
     Feedback_Date DATE DEFAULT CURRENT_DATE
 );
+
+## 8. How to run our project 
+### 8.1 Prerequisites
+    - 1. Download PostgreSQL 16:
+        - Visit the PostgreSQL download page.
+        - Select the appropriate installer for your operating system (Windows, macOS, or Linux).
+        - Install PostgreSQL 16 by following the on-screen instructions.
+    - 2. Set Up PostgreSQL Database:
+        - Open SQL PowerShell or your preferred PostgreSQL client (like pgAdmin).
+        - Create a new database named brain_rush:
+        - CREATE DATABASE brain_rush;
+### 7.1 Running the Brain Rush Project with Flyway
+    - 1. Open the Project:
+        - Open your favorite Integrated Development Environment (IDE) like IntelliJ IDEA, Eclipse, or Visual Studio Code.
+        - Import or open the Brain Rush project in your IDE.
+    - 2. Configure Database Connection:
+        - Locate the application.properties file (usually under src/main/resources).
+        - Modify the database connection properties to match your PostgreSQL setup:
+            spring.datasource.url=jdbc:postgresql://localhost:5432/brain_rush
+            spring.datasource.username=your_username
+            spring.datasource.password=your_password
+            spring.datasource.driver-class-name=org.postgresql.Driver
+            flyway.locations=classpath:/db/migration
+    - 3. This configuration tells Flyway to look for migration scripts in the             src/main/resources/db/migration directory.
+    - 4. Run the Project:
+        In your IDE, locate the main class of the Brain Rush project.
+        Run the project as a Java application.
+        The server should start. During startup, Flyway will automatically run any pending database migrations based on the scripts found in the db/migration folder.
+    - 5. Verify Migrations:
+        - You can verify the migrations have been applied by checking the Flyway status:
+            ./mvnw flyway:info
+        - If you want to apply migrations manually or check the applied migrations:
+            ./mvnw flyway:migrate
+    - 6. Testing:
+        Go to this link http://localhost:8888/course
+
+    - 7. Handling Issues:
+        - If you encounter any issues with the database connection, ensure that your PostgreSQL server is running and that your user has the appropriate permissions.
+        - Verify that the database brain_rush exists and that the connection details in application.properties are correct.
+        - Check the logs for any Flyway-related errors to diagnose issues with migration scripts or database access.
+## 9. Maintanse project
+### 9.1 Database Maintenance
+    - 1. Regular Backups:
+        - Use pg_dump to back up your database regularly (daily recommended).
+            pg_dump -U your_username -d brain_rush -F c -b -v -f /path/to/backup/brain_rush_backup.sql
+    - 2. Optimize Database Performance:
+        - Regularly run VACUUM FULL; and ANALYZE; in SQL.
+        - Set PostgreSQL’s auto_vacuum setting to on:
+            ALTER DATABASE brain_rush SET auto_vacuum = on;
+    - 3. Monitor Database Health:
+        - Check disk space and review logs for errors.
+        - Use:
+            df -h
+            tail -f /var/log/postgresql/postgresql-16-main.log
+    - 4. Flyway Migrations:
+        - Check for pending migrations:
+            ./mvnw flyway:info
+        - Apply migrations:
+            ./mvnw flyway:migrate
+### 9.2 Application Maintenance
+    - 1. Update Dependencies:
+        - Check for updates:
+            ./mvnw versions:display-dependency-updates
+        - Update dependencies:
+            ./mvnw versions:use-latest-releases
+    - 2. Log Monitoring:
+        - Use logback for structured logging:
+            tail -f /path/to/logs/application.log
+    - 3. Health Checks:
+        - Expose a health check endpoint:
+            GET http://localhost:8080/actuator/health
+
+    - 4. Regular Restarts:
+        - Periodically restart the application server:
+            ./mvnw spring-boot:stop
+            ./mvnw spring-boot:start
+    - 5. Backup Configuration Files:
+        - Regularly back up application configuration files:
+            cp /path/to/config /path/to/backup/
+
+By following these routine maintenance tasks, the Brain Rush project will run efficiently and remain secure.
 
 
 
