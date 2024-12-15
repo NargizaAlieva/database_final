@@ -1,6 +1,5 @@
 package org.example.database_final.dto;
 
-import java.io.Serializable;
 
 /**
  * A Data Transfer Object (DTO) class for transferring `Category` data between different layers of the application.
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * for use in service and presentation layers. The `CategoryDto` class helps in reducing the exposure of
  * the entity model and provides an abstraction layer for communication between the backend and frontend.
  */
-public class CategoryDto implements Serializable {
+public class CategoryDto {
 
     /**
      * The unique identifier for the category. This ID is used to uniquely
