@@ -242,13 +242,11 @@
                                 </div>
                             </div>
                         </div>
-                    `);
+                        `);
                     });
-                } else {
-                    $('#searchResults').html('<div class="alert alert-warning">No instructors found</div>');
                 }
             }).fail(function () {
-                $('#searchResults').html('<div class="alert alert-warning">Failed to fetch instructor data</div>');
+                $('#searchResults').html('<div class="alert alert-warning">No student found.</div>');
             });
         });
     });
