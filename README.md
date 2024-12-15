@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS Feedback (
     Comment TEXT,
     Feedback_Date DATE DEFAULT CURRENT_DATE
 );
+```
 
 ## 8. How to run our project 
 ### 8.1 Prerequisites
