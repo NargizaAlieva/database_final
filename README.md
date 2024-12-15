@@ -202,6 +202,3 @@ CREATE TABLE IF NOT EXISTS Feedback (
             cp /path/to/config /path/to/backup/
 
 By following these routine maintenance tasks, the Brain Rush project will run efficiently and remain secure.
-
-
-
