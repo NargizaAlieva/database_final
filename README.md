@@ -12,10 +12,8 @@ This document provides an overview of the Brain Rush project, covering the syste
 3. [Conceptual Design](#3-conceptual-design)
 4. [Logical Design](#4-logical-design)
 5. [Database Setup](#5-database-setup)
-6. [Backend Implementation (Java Spring Boot)](#6-backend-implementation-java-spring-boot)
-7. [Frontend Implementation (Thymeleaf)](#7-frontend-implementation-thymeleaf)
-8. [How to run our project](#8-how-to-run-our-project)
-9. [Maintanse project](#9-maintanse-project)
+6. [How to run our project](#8-how-to-run-our-project)
+7. [Maintanse project](#9-maintanse-project)
 
 ## 1. Project Overview
 ### 1.1 Title:
@@ -123,8 +121,8 @@ CREATE TABLE IF NOT EXISTS Feedback (
 );
 ```
 
-## 8. How to run our project 
-### 8.1 Prerequisites
+## 6. How to run our project 
+### 6.1 Prerequisites
     - 1. Download PostgreSQL 16:
         - Visit the PostgreSQL download page.
         - Select the appropriate installer for your operating system (Windows, macOS, or Linux).
@@ -133,7 +131,7 @@ CREATE TABLE IF NOT EXISTS Feedback (
         - Open SQL PowerShell or your preferred PostgreSQL client (like pgAdmin).
         - Create a new database named brain_rush:
         - CREATE DATABASE brain_rush;
-### 7.1 Running the Brain Rush Project with Flyway
+### 6.1 Running the Brain Rush Project with Flyway
     - 1. Open the Project:
         - Open your favorite Integrated Development Environment (IDE) like IntelliJ IDEA, Eclipse, or Visual Studio Code.
         - Import or open the Brain Rush project in your IDE.
@@ -162,8 +160,8 @@ CREATE TABLE IF NOT EXISTS Feedback (
         - If you encounter any issues with the database connection, ensure that your PostgreSQL server is running and that your user has the appropriate permissions.
         - Verify that the database brain_rush exists and that the connection details in application.properties are correct.
         - Check the logs for any Flyway-related errors to diagnose issues with migration scripts or database access.
-## 9. Maintanse project
-### 9.1 Database Maintenance
+## 7. Maintanse project
+### 7.1 Database Maintenance
     - 1. Regular Backups:
         - Use pg_dump to back up your database regularly (daily recommended).
             pg_dump -U your_username -d brain_rush -F c -b -v -f /path/to/backup/brain_rush_backup.sql
@@ -181,7 +179,7 @@ CREATE TABLE IF NOT EXISTS Feedback (
             ./mvnw flyway:info
         - Apply migrations:
             ./mvnw flyway:migrate
-### 9.2 Application Maintenance
+### 7.2 Application Maintenance
     - 1. Update Dependencies:
         - Check for updates:
             ./mvnw versions:display-dependency-updates
